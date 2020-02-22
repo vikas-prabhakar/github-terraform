@@ -1,11 +1,12 @@
-provider "aws" {
-  region  = "ap-south-1"
-}
-resource "aws_vpc" "main" {
-  cidr_block       = "10.0.0.0/16"
-  instance_tenancy = "default"
-
-  tags = {
-    Name = "main"
+terraform {
+  backend "s3" {
+    bucket         = "ec2-github"
+    key            = "terraform.tfstate"
+    dynamodb_table = "ec2-guthub"
   }
+}
+
+
+module "aws-ec2-instance" {
+  source                      = "./modules/ec2"
 }
