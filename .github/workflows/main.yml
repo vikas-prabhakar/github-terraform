@@ -22,12 +22,16 @@ jobs:
         sudo mv terraform /usr/local/bin/
     - name: Verify Terraform version
       run: terraform --version
+      
+    - name: Set variables
+      run: |
+        grep ^key main.tf|awk -F '=' '{print $2}'|sed -e 's/"//g' > TAG_Key
 
     - name: Terraform init
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: terraform init -input=false
+      run: terraform init -input=false init -backend-config "bucket=ec2-github" -backend-config "dynamodb_table=ec2-guthub"  -backend-config "region=ap-south-1"     -backend-config "key=$(TAG_Key)
 
     - name: Terraform validation
       run: terraform validate
