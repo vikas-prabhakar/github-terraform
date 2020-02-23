@@ -27,7 +27,7 @@ jobs:
       run: |
         echo "main.tf" > TERRAFORM_FILE
         cat $(cat TERRAFORM_FILE) | grep key=|awk -F '=' '{print $2}'|sed -e 's/"//g' > TAG_KEY
-        cat $(cat TERRAFORM_ACTION) | grep "action ="|awk -F '=' '{print $2}'|sed -e 's/"//g' > TAG_ACTION
+        cat $(cat TERRAFORM_FILE) | grep "action ="|awk -F '=' '{print $2}'|sed -e 's/"//g' > TAG_ACTION
 
     - name: Terraform init
       env:
